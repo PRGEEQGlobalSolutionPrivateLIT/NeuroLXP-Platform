@@ -16,6 +16,9 @@ export function StepLayout({
   footer,
   backHref,
   showBrand = true,
+  portalTitle = 'Super Admin Portal',
+  tagline,
+  footerLink,
 }: {
   title: string;
   subtitle?: string;
@@ -26,7 +29,19 @@ export function StepLayout({
   footer?: ReactNode;
   backHref?: string;
   showBrand?: boolean;
+  portalTitle?: string;
+  tagline?: string;
+  /** Omit for Super Admin defaults; pass `null` to hide footer link */
+  footerLink?: { href: string; label: string } | null;
 }) {
+  const resolvedTagline =
+    tagline ?? (mode === 'signup' ? 'Secure administrator registration' : 'Secure administrator access');
+  const resolvedFooterLink =
+    footerLink !== undefined
+      ? footerLink ?? undefined
+      : mode === 'signup'
+        ? { href: '/superadmin/auth/signin', label: 'Already have an account? Sign in' }
+        : { href: '/superadmin/auth/signup', label: 'Need an account? Register' };
   const card = (
     <div className="neo-card w-full p-6 md:p-9">
       <ProgressBar current={currentStep} total={totalSteps} mode={mode} />
@@ -67,14 +82,7 @@ export function StepLayout({
   }
 
   return (
-    <AuthShell
-      tagline={mode === 'signup' ? 'Secure administrator registration' : 'Secure administrator access'}
-      footerLink={
-        mode === 'signup'
-          ? { href: '/superadmin/auth/signin', label: 'Already have an account? Sign in' }
-          : { href: '/superadmin/auth/signup', label: 'Need an account? Register' }
-      }
-    >
+    <AuthShell portalTitle={portalTitle} tagline={resolvedTagline} footerLink={resolvedFooterLink}>
       {card}
     </AuthShell>
   );

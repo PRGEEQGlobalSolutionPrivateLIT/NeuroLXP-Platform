@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Users,
@@ -17,6 +17,7 @@ import { useAuthStore } from '@/superadmin/store/auth.store';
 import { ProtectedRoute } from '@/superadmin/components/ProtectedRoute';
 import { NeumorphicButton } from '@/components/ui/NeumorphicButton';
 import neoToast from '@/lib/toast';
+import { platformAdminApi } from '@/lib/platform-admin-api';
 
 const STATS: { label: string; value: string; change: string; icon: LucideIcon }[] = [
   { label: 'Total learners', value: '12,480', change: '+8.2%', icon: Users },
@@ -58,12 +59,19 @@ function ProfileFieldRow({ label, value, mono }: { label: string; value: string;
   );
 }
 
+type PendingApproval = {
+  id: string;
+  platform_admin: { full_name: string; primary_email: string; user_id: string | null };
+};
+
 export function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, user, logout, hydrateFromStorage } = useAuthStore();
+  const [pendingApprovals, setPendingApprovals] = useState<PendingApproval[]>([]);
 
   useEffect(() => {
     hydrateFromStorage();
+    platformAdminApi.listPendingApprovals().then(({ data }) => setPendingApprovals(data)).catch(() => {});
   }, [hydrateFromStorage]);
 
   useEffect(() => {
@@ -109,7 +117,7 @@ export function DashboardPage() {
               <NeumorphicButton
                 variant="primary"
                 className="w-full sm:w-auto"
-                onClick={() => neoToast.info('🏢 Platform Admin — registration flow coming soon')}
+                onClick={() => router.push('/superadmin/platform-admin/invite')}
               >
                 1. Platform Admin
               </NeumorphicButton>
@@ -121,6 +129,32 @@ export function DashboardPage() {
               </NeumorphicButton>
             </div>
           </div>
+
+          {pendingApprovals.length > 0 && (
+            <div className="neo-card p-6">
+              <h2 className="text-lg font-bold text-[var(--neo-text)]">Platform admin approvals</h2>
+              <ul className="mt-4 space-y-3">
+                {pendingApprovals.map((req) => (
+                  <li key={req.id} className="flex flex-wrap items-center justify-between gap-2 neo-inset rounded-lg px-4 py-3">
+                    <div>
+                      <p className="font-semibold">{req.platform_admin.full_name}</p>
+                      <p className="text-xs text-[var(--neo-muted)]">{req.platform_admin.primary_email}</p>
+                    </div>
+                    <NeumorphicButton
+                      variant="primary"
+                      onClick={async () => {
+                        await platformAdminApi.approveRequest(req.id);
+                        neoToast.success('Platform admin approved');
+                        setPendingApprovals((list) => list.filter((r) => r.id !== req.id));
+                      }}
+                    >
+                      Approve
+                    </NeumorphicButton>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {STATS.map((s) => {

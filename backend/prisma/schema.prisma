@@ -111,3 +111,231 @@ model SigninSession {
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
 }
+
+model PlatformAdmin {
+  id                      String    @id @default(uuid())
+  full_name               String
+  date_of_birth           DateTime
+  primary_email           String    @unique
+  primary_phone           String    @unique
+  alternative_email       String?
+  alternative_phone       String?
+  password_hash           String
+  user_id                 String?   @unique
+  totp_secret             String?
+  recovery_code_hash      String?
+  onboarding_completed    Boolean   @default(false)
+  is_active               Boolean   @default(true)
+  is_locked               Boolean   @default(false)
+  lock_expires_at         DateTime?
+  failed_primary_otp      Int       @default(0)
+  failed_alt_otp          Int       @default(0)
+  magic_link_token_hash   String?
+  magic_link_expires_at   DateTime?
+  created_by_super_admin  String?
+  signin_log              Json      @default("[]")
+  created_at              DateTime  @default(now())
+  updated_at              DateTime  @updatedAt
+
+  sessions           PlatformAdminSession[]
+  signin_sessions    PlatformAdminSigninSession[]
+  approval_requests  PlatformAdminApprovalRequest[]
+}
+
+model PlatformAdminSession {
+  id                String   @id @default(uuid())
+  platform_admin_id String
+  refresh_token     String   @unique
+  access_token      String?
+  expires_at        DateTime
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  platform_admin PlatformAdmin @relation(fields: [platform_admin_id], references: [id], onDelete: Cascade)
+
+  @@index([platform_admin_id])
+}
+
+model PlatformAdminSigninSession {
+  id                String   @id @default(uuid())
+  session_id        String   @unique
+  platform_admin_id String?
+  password_verified Boolean  @default(false)
+  draft_data        Json     @default("{}")
+  expires_at        DateTime
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  platform_admin PlatformAdmin? @relation(fields: [platform_admin_id], references: [id], onDelete: Cascade)
+
+  @@index([platform_admin_id])
+}
+
+model PlatformAdminApprovalRequest {
+  id                String   @id @default(uuid())
+  platform_admin_id String
+  session_id        String?
+  status            String   @default("pending")
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  platform_admin PlatformAdmin @relation(fields: [platform_admin_id], references: [id], onDelete: Cascade)
+
+  @@index([platform_admin_id])
+  @@index([status])
+}
+
+model InstitutionAdmin {
+  id                         String    @id @default(uuid())
+  full_name                  String
+  date_of_birth              DateTime
+  primary_email              String    @unique
+  primary_phone              String    @unique
+  alternative_email          String?
+  alternative_phone          String?
+  password_hash              String
+  user_id                    String?   @unique
+  totp_secret                String?
+  recovery_code_hash         String?
+  onboarding_completed       Boolean   @default(false)
+  is_active                  Boolean   @default(true)
+  is_locked                  Boolean   @default(false)
+  lock_expires_at            DateTime?
+  failed_primary_otp         Int       @default(0)
+  failed_alt_otp             Int       @default(0)
+  magic_link_token_hash      String?
+  magic_link_expires_at      DateTime?
+  created_by_platform_admin  String?
+  signin_log                 Json      @default("[]")
+  created_at                 DateTime  @default(now())
+  updated_at                 DateTime  @updatedAt
+
+  sessions          InstitutionAdminSession[]
+  signin_sessions   InstitutionAdminSigninSession[]
+  approval_requests InstitutionAdminApprovalRequest[]
+}
+
+model InstitutionAdminSession {
+  id                   String   @id @default(uuid())
+  institution_admin_id String
+  refresh_token        String   @unique
+  access_token         String?
+  expires_at           DateTime
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  institution_admin InstitutionAdmin @relation(fields: [institution_admin_id], references: [id], onDelete: Cascade)
+
+  @@index([institution_admin_id])
+}
+
+model InstitutionAdminSigninSession {
+  id                   String   @id @default(uuid())
+  session_id           String   @unique
+  institution_admin_id String?
+  password_verified    Boolean  @default(false)
+  draft_data           Json     @default("{}")
+  expires_at           DateTime
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  institution_admin InstitutionAdmin? @relation(fields: [institution_admin_id], references: [id], onDelete: Cascade)
+
+  @@index([institution_admin_id])
+}
+
+model InstitutionAdminApprovalRequest {
+  id                   String   @id @default(uuid())
+  institution_admin_id String
+  session_id           String?
+  status               String   @default("pending")
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  institution_admin InstitutionAdmin @relation(fields: [institution_admin_id], references: [id], onDelete: Cascade)
+
+  @@index([institution_admin_id])
+  @@index([status])
+}
+
+enum LxpMemberRole {
+  coordinator
+  faculty
+  student
+}
+
+model LxpMember {
+  id                    String        @id @default(uuid())
+  role                  LxpMemberRole
+  full_name             String
+  email                 String
+  phone                 String?
+  department            String?
+  employee_id           String?
+  extra_data            Json          @default("{}")
+  password_hash         String
+  user_id               String?       @unique
+  must_change_password  Boolean       @default(true)
+  onboarding_completed  Boolean       @default(false)
+  totp_secret           String?
+  recovery_code_hash    String?
+  magic_link_token_hash String?
+  magic_link_expires_at DateTime?
+  created_by_type       String?
+  created_by_id         String?
+  is_active             Boolean       @default(true)
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+
+  sessions           LxpMemberSession[]
+  signin_sessions    LxpMemberSigninSession[]
+  approval_requests  LxpMemberApprovalRequest[]
+
+  @@unique([email, role])
+  @@index([role])
+  @@index([created_by_id])
+}
+
+model LxpMemberSession {
+  id              String   @id @default(uuid())
+  member_id       String
+  refresh_token   String   @unique
+  expires_at      DateTime
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  member LxpMember @relation(fields: [member_id], references: [id], onDelete: Cascade)
+
+  @@index([member_id])
+}
+
+model LxpMemberSigninSession {
+  id              String   @id @default(uuid())
+  session_id      String   @unique
+  member_id       String
+  password_verified Boolean @default(false)
+  draft_data      Json     @default("{}")
+  expires_at      DateTime
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  member LxpMember @relation(fields: [member_id], references: [id], onDelete: Cascade)
+
+  @@index([member_id])
+}
+
+model LxpMemberApprovalRequest {
+  id            String   @id @default(uuid())
+  member_id     String
+  session_id    String?
+  approver_role String
+  status        String   @default("pending")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  member LxpMember @relation(fields: [member_id], references: [id], onDelete: Cascade)
+
+  @@index([member_id])
+  @@index([status])
+  @@index([approver_role])
+}

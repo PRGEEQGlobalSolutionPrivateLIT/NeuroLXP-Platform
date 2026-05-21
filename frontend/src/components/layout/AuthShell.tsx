@@ -6,11 +6,13 @@ import Link from 'next/link';
 export function AuthShell({
   children,
   brand = 'NeuroLXP',
+  portalTitle = 'Super Admin Portal',
   tagline,
   footerLink,
 }: {
   children: ReactNode;
   brand?: string;
+  portalTitle?: string;
   tagline?: string;
   footerLink?: { href: string; label: string };
 }) {
@@ -22,7 +24,7 @@ export function AuthShell({
             <span className="text-xl font-bold text-[var(--neo-primary)]">N</span>
           </div>
           <p className="neo-kicker">{brand}</p>
-          <h1 className="neo-heading mt-2">Super Admin Portal</h1>
+          <h1 className="neo-heading mt-2">{portalTitle}</h1>
           {tagline ? <p className="neo-subheading mt-2">{tagline}</p> : null}
         </header>
         {children}
