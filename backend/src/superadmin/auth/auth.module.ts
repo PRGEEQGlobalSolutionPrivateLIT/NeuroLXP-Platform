@@ -8,6 +8,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { EmailService } from './services/email.service';
 import { SmsService } from './services/sms.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { SuperadminProfileController } from './superadmin-profile.controller';
 import { PrismaModule } from '@/prisma/prisma.module';
 
 @Module({
@@ -24,6 +25,7 @@ import { PrismaModule } from '@/prisma/prisma.module';
       }),
     }),
   ],
+  controllers: [SuperadminProfileController],
   providers: [
     PasswordService,
     OtpService,

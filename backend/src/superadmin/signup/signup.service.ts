@@ -177,7 +177,7 @@ export class SignupService {
     const session = await this.getSession(sessionId);
     const draft = session.draft_data as SignupDraft;
     const email = draft.primary_email || 'admin@neurolxp.com';
-    const { secret, qrCodeUrl } = this.otpService.generateTotpSecret(email);
+    const { secret, qrCodeUrl } = this.otpService.generateTotpSecret(email, 'superadmin');
     const qrCodeDataUrl = await this.otpService.generateQrCodeDataUrl(qrCodeUrl);
     await this.updateDraft(sessionId, { totp_secret: secret });
     return { secret, qrCodeDataUrl };

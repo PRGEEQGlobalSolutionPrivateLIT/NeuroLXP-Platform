@@ -9,8 +9,9 @@ import { NeumorphicInput } from '@/components/ui/NeumorphicInput';
 import { NeumorphicCard } from '@/components/ui/NeumorphicCard';
 import { parseMemberCsv, MEMBER_CSV_TEMPLATE, MEMBER_CSV_COLUMN_HELP, ParsedCsvRow } from '@/lib/csv-parse';
 import { membersApi, MemberRole, CsvRowPayload } from '@/lib/members-api';
+import { StudentBulkCsvUpload } from '@/components/members/StudentBulkCsvUpload';
 
-type Mode = 'choose' | 'single' | 'csv' | 'csv_preview' | 'done';
+type Mode = 'choose' | 'single' | 'csv' | 'csv_preview' | 'student_bulk' | 'done';
 type ValidatedRow = CsvRowPayload & { errors: string[]; warnings: string[]; valid: boolean };
 
 const ROLE_LABELS: Record<MemberRole, string> = {
@@ -22,11 +23,12 @@ const ROLE_LABELS: Record<MemberRole, string> = {
 interface Props {
   role: MemberRole;
   backHref: string;
-  createdByType: 'platform_admin' | 'institution_admin';
+  createdByType: 'platform_admin' | 'institution_admin' | 'super_admin';
   createdById?: string;
+  onBulkComplete?: (bulkUploadId: string) => void;
 }
 
-export function MemberInvitePage({ role, backHref, createdByType, createdById }: Props) {
+export function MemberInvitePage({ role, backHref, createdByType, createdById, onBulkComplete }: Props) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>('choose');
   const [loading, setLoading] = useState(false);
@@ -192,13 +194,38 @@ export function MemberInvitePage({ role, backHref, createdByType, createdById }:
     >
       {mode === 'choose' && (
         <div className="space-y-4">
-          <NeumorphicButton variant="primary" className="w-full" onClick={() => setMode('csv')}>
-            CSV bulk upload
-          </NeumorphicButton>
-          <NeumorphicButton className="w-full" onClick={() => setMode('single')}>
-            Single upload (name & email)
-          </NeumorphicButton>
+          {role === 'student' ? (
+            <>
+              <NeumorphicButton variant="primary" className="w-full" onClick={() => setMode('student_bulk')}>
+                Bulk upload (CSV)
+              </NeumorphicButton>
+              <NeumorphicButton className="w-full" onClick={() => setMode('single')}>
+                Single upload (name & email)
+              </NeumorphicButton>
+            </>
+          ) : (
+            <>
+              <NeumorphicButton variant="primary" className="w-full" onClick={() => setMode('csv')}>
+                CSV bulk upload
+              </NeumorphicButton>
+              <NeumorphicButton className="w-full" onClick={() => setMode('single')}>
+                Single upload (name & email)
+              </NeumorphicButton>
+            </>
+          )}
         </div>
+      )}
+
+      {mode === 'student_bulk' && (
+        <StudentBulkCsvUpload
+          createdByType={createdByType}
+          createdById={createdById}
+          onBack={() => setMode('choose')}
+          onComplete={(bulkUploadId) => {
+            if (onBulkComplete) onBulkComplete(bulkUploadId);
+            else router.push(`${backHref}?bulkUpload=${bulkUploadId}`);
+          }}
+        />
       )}
 
       {mode === 'single' && (

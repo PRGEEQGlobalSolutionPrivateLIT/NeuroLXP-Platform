@@ -1,95 +1,97 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { NeumorphicButton } from '@/components/ui/NeumorphicButton';
+import { Users, Shield, Activity, BookOpen, LogIn, History } from 'lucide-react';
+import { useInstitutionAuthStore } from '@/institution-admin/store/auth.store';
+import { getIaLastLogin, getIaLoginHistory, IaLoginEntry } from '@/institution-admin/lib/ia-session';
 import {
   RecoveryCodeAlertModal,
   INSTITUTION_RECOVERY_STORAGE_KEY,
 } from '@/components/ui/RecoveryCodeAlertModal';
-import { useInstitutionAuthStore } from '@/institution-admin/store/auth.store';
-import { MemberDashboardActions } from '@/components/members/MemberDashboardActions';
-import { membersApi } from '@/lib/members-api';
-import neoToast from '@/lib/toast';
+import { DashboardPageHeader } from '@/components/dashboard/DashboardPageHeader';
+import { DashboardStatCard } from '@/components/dashboard/DashboardStatCard';
+import { DashboardSummaryCard } from '@/components/dashboard/DashboardSummaryCard';
+import { DashboardBarChart } from '@/components/dashboard/DashboardBarChart';
+import { DashboardLineChart } from '@/components/dashboard/DashboardLineChart';
+import { DashboardLoginTable, formatIaDateTime } from '@/components/dashboard/DashboardLoginTable';
+
+const STATS = [
+  { label: 'Total members', value: '1,240', change: '+12 this week', icon: Users },
+  { label: 'Active courses', value: '48', change: '+2 new', icon: BookOpen },
+  { label: 'Engagement', value: '92%', change: 'Strong', icon: Activity },
+  { label: 'Security score', value: '96%', change: 'Excellent', icon: Shield },
+];
 
 export function InstitutionAdminDashboardPage() {
-  const router = useRouter();
-  const { user, logout, hydrateFromStorage, isAuthenticated } = useInstitutionAuthStore();
+  const { user, hydrateFromStorage } = useInstitutionAuthStore();
+  const [lastLogin, setLastLogin] = useState<string | null>(null);
+  const [history, setHistory] = useState<IaLoginEntry[]>([]);
   const [recoveryCodeAlert, setRecoveryCodeAlert] = useState<string | null>(null);
-  const [coordinatorApprovals, setCoordinatorApprovals] = useState<
-    { id: string; member: { full_name: string; email: string; role: string } }[]
-  >([]);
 
   useEffect(() => {
     hydrateFromStorage();
-  }, [hydrateFromStorage]);
-
-  useEffect(() => {
-    const token = localStorage.getItem('institutionAccessToken');
-    if (!token && !isAuthenticated) router.replace('/institution-admin/auth/signin');
-  }, [isAuthenticated, router]);
-
-  useEffect(() => {
+    setLastLogin(getIaLastLogin());
+    setHistory(getIaLoginHistory());
     const pending = sessionStorage.getItem(INSTITUTION_RECOVERY_STORAGE_KEY);
     if (pending) setRecoveryCodeAlert(pending);
-    membersApi.listPendingApprovals('institution_admin').then(({ data }) => setCoordinatorApprovals(data)).catch(() => {});
-  }, []);
+  }, [hydrateFromStorage]);
 
   const dismissRecoveryAlert = () => {
     sessionStorage.removeItem(INSTITUTION_RECOVERY_STORAGE_KEY);
     setRecoveryCodeAlert(null);
   };
 
+  const displayName = user?.email?.split('@')[0] ?? 'Admin';
+
   return (
-    <div className="neo-page min-h-screen p-8">
+    <>
       {recoveryCodeAlert && (
         <RecoveryCodeAlertModal recoveryCode={recoveryCodeAlert} onDismiss={dismissRecoveryAlert} />
       )}
 
-      <div className="mx-auto max-w-4xl neo-card p-8">
-        <p className="neo-kicker">Institution Admin</p>
-        <h1 className="text-2xl font-bold text-[var(--neo-text)]">Dashboard</h1>
-        <p className="mt-2 text-sm text-[var(--neo-muted)]">
-          Signed in as {user?.email ?? 'admin'} · User ID: {user?.userId ?? '—'}
-        </p>
-        <MemberDashboardActions basePath="/institution-admin" />
+      <div className="space-y-6">
+        <DashboardPageHeader
+          breadcrumb="Dashboard / Home"
+          title={`Welcome back, ${displayName}`}
+          subtitle="Institution overview — use Add members for invites and approvals."
+        />
 
-        {coordinatorApprovals.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold">Coordinator sign-in approvals</h2>
-            <ul className="mt-4 space-y-3">
-              {coordinatorApprovals.map((req) => (
-                <li key={req.id} className="neo-card flex flex-wrap justify-between gap-3 !p-4">
-                  <div>
-                    <p className="font-medium">{req.member.full_name}</p>
-                    <p className="text-xs text-[var(--neo-muted)]">{req.member.email}</p>
-                  </div>
-                  <NeumorphicButton
-                    variant="primary"
-                    onClick={async () => {
-                      await membersApi.approveMemberRequest(req.id);
-                      setCoordinatorApprovals((p) => p.filter((x) => x.id !== req.id));
-                      neoToast.success('Coordinator approved');
-                    }}
-                  >
-                    Approve
-                  </NeumorphicButton>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <DashboardSummaryCard
+            label="Last login"
+            value={lastLogin ? formatIaDateTime(lastLogin) : '—'}
+            hint={user?.email ? `Signed in as ${user.email}` : 'Sign in to record session'}
+            icon={LogIn}
+          />
+          <DashboardSummaryCard
+            label="Login history"
+            value={`${history.length} sessions`}
+            hint="Stored on this device"
+            icon={History}
+          />
+        </div>
 
-        <NeumorphicButton
-          className="mt-6"
-          onClick={() => {
-            logout();
-            router.replace('/institution-admin/auth/signin');
-          }}
-        >
-          Sign out
-        </NeumorphicButton>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {STATS.map((s) => (
+            <DashboardStatCard key={s.label} {...s} />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <DashboardBarChart
+            title="Member activity"
+            subtitle="Weekly active members (sample)"
+            values={[30, 50, 42, 68, 55, 78, 60]}
+          />
+          <DashboardLineChart
+            title="Sign-in trend"
+            subtitle="Last 7 days (sample)"
+            points="0,48 30,40 60,35 90,28 120,32 150,20 180,25 200,18"
+          />
+        </div>
+
+        <DashboardLoginTable history={history} formatDate={formatIaDateTime} />
       </div>
-    </div>
+    </>
   );
 }

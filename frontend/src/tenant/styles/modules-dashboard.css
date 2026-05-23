@@ -1,0 +1,345 @@
+.modulesPage {
+  min-height: 100vh;
+  padding: 32px;
+  background: #e6e7ee;
+  color: #31344b;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.modulesCard {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 36px;
+  border-radius: 26px;
+  background: #e6e7ee;
+  box-shadow:
+    8px 8px 18px #c1c2c8,
+    -8px -8px 18px #ffffff;
+}
+
+.modulesTitle {
+  margin: 0 0 34px;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 800;
+  color: #25283d;
+}
+
+.tenantInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 36px;
+}
+
+.modulesField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modulesField label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #31344b;
+}
+
+.modulesField input {
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  padding: 15px 16px;
+  background: #e6e7ee;
+  color: #31344b;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow:
+    inset 4px 4px 8px #c1c2c8,
+    inset -4px -4px 8px #ffffff;
+}
+
+.moduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.moduleRow {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 22px;
+  border-radius: 20px;
+  background: #e6e7ee;
+  box-shadow:
+    5px 5px 12px #c1c2c8,
+    -5px -5px 12px #ffffff;
+}
+
+.profilingRow {
+  align-items: flex-start;
+}
+
+.moduleNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  font-size: 22px;
+  font-weight: 800;
+  background: #e6e7ee;
+  box-shadow:
+    inset 3px 3px 7px #c1c2c8,
+    inset -3px -3px 7px #ffffff;
+}
+
+.moduleContent h2 {
+  margin: 4px 0 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: #25283d;
+}
+
+/* Profiling tenant checkboxes in horizontal grid */
+.tenantTypeChecklist {
+  width: 100%;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.checkboxLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 52px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #e6e7ee;
+  font-size: 18px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow:
+    inset 3px 3px 7px #c1c2c8,
+    inset -3px -3px 7px #ffffff;
+}
+
+.singleModuleLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 560px;
+  min-height: 52px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #e6e7ee;
+  font-size: 19px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow:
+    inset 3px 3px 7px #c1c2c8,
+    inset -3px -3px 7px #ffffff;
+}
+
+.checkboxLine input,
+.singleModuleLine input {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  cursor: pointer;
+  accent-color: #31344b;
+}
+
+.summaryBox {
+  margin-top: 32px;
+  padding: 28px;
+  border-radius: 22px;
+  background: #e6e7ee;
+  box-shadow:
+    inset 4px 4px 9px #c1c2c8,
+    inset -4px -4px 9px #ffffff;
+}
+
+.summaryBox h3 {
+  margin: 0 0 12px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #25283d;
+}
+
+.summaryBox p {
+  margin: 0 0 18px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #55576a;
+}
+
+.summaryMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.summaryMeta span {
+  padding: 10px 15px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  background: #e6e7ee;
+  box-shadow:
+    3px 3px 7px #c1c2c8,
+    -3px -3px 7px #ffffff;
+}
+
+.summaryBox ul {
+  margin: 0;
+  padding-left: 24px;
+}
+
+.summaryBox li {
+  margin-bottom: 9px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.emptySummary {
+  color: #d64545 !important;
+  font-weight: 700;
+}
+
+.modulesActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.modulesActions button {
+  border: none;
+  border-radius: 16px;
+  padding: 15px 28px;
+  background: #e6e7ee;
+  color: #1d8f4e;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow:
+    5px 5px 11px #c1c2c8,
+    -5px -5px 11px #ffffff;
+}
+
+.modulesActions button:hover {
+  box-shadow:
+    inset 4px 4px 8px #c1c2c8,
+    inset -4px -4px 8px #ffffff;
+}
+
+@media (max-width: 1100px) {
+  .tenantTypeChecklist {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .tenantInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .moduleRow {
+    grid-template-columns: 44px 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .modulesPage {
+    padding: 16px;
+  }
+
+  .modulesCard {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .modulesTitle {
+    font-size: 32px;
+  }
+
+  .moduleContent h2 {
+    font-size: 23px;
+  }
+
+  .tenantTypeChecklist {
+    grid-template-columns: 1fr;
+  }
+
+  .checkboxLine,
+  .singleModuleLine {
+    font-size: 17px;
+    padding: 13px 14px;
+  }
+
+  .modulesActions button {
+    width: 100%;
+  }
+}
+
+.moduleRow,
+.checkboxLine,
+.singleModuleLine,
+.summaryMeta span,
+.modulesActions button {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.moduleRow:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    7px 7px 15px #b8b9bf,
+    -7px -7px 15px #ffffff;
+}
+
+.checkboxLine:hover,
+.singleModuleLine:hover {
+  transform: translateY(-2px);
+  color: #1d8f4e;
+  box-shadow:
+    5px 5px 10px #c1c2c8,
+    -5px -5px 10px #ffffff;
+}
+
+.checkboxLine:has(input:checked),
+.singleModuleLine:has(input:checked) {
+  color: #1d8f4e;
+  box-shadow:
+    inset 4px 4px 8px #b8b9bf,
+    inset -4px -4px 8px #ffffff;
+}
+
+.modulesField input:hover {
+  box-shadow:
+    inset 5px 5px 10px #b8b9bf,
+    inset -5px -5px 10px #ffffff;
+}
+
+.summaryMeta span:hover {
+  transform: translateY(-2px);
+  color: #1d8f4e;
+}
+
+.modulesActions button:hover {
+  transform: translateY(-2px);
+  color: #12733d;
+  box-shadow:
+    inset 4px 4px 8px #c1c2c8,
+    inset -4px -4px 8px #ffffff;
+}

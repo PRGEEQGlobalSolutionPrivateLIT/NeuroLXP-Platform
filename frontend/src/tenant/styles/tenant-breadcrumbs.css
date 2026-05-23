@@ -1,0 +1,66 @@
+.tenantBreadcrumbs {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #e6e7ee;
+  box-shadow:
+    inset 3px 3px 7px #c3c4ca,
+    inset -3px -3px 7px #ffffff;
+}
+
+.tenantBreadcrumbsList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tenantBreadcrumbsItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b6d80;
+}
+
+.tenantBreadcrumbsItem a {
+  color: #31344b;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.tenantBreadcrumbsItem a:hover {
+  color: #1d8f4e;
+}
+
+.tenantBreadcrumbsItem.isCurrent span,
+.tenantBreadcrumbsItem.isCurrent {
+  color: #1d8f4e;
+}
+
+.tenantBreadcrumbsSep {
+  color: #9a9cb0;
+  user-select: none;
+}
+
+.tenantBreadcrumbsBack {
+  margin-top: 10px;
+}
+
+.tenantBreadcrumbsBack a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #31344b;
+  text-decoration: none;
+}
+
+.tenantBreadcrumbsBack a:hover {
+  color: #1d8f4e;
+}

@@ -16,6 +16,7 @@ import {
   memberUserIdStorageKey,
   memberAuthShellProps,
   memberPageTitle,
+  MEMBER_TOTP_APP_LABEL,
   persistMemberLastRole,
 } from '@/member/lib/member-routes';
 
@@ -60,7 +61,7 @@ export function MemberOnboardingPage({ role }: Props) {
       subtitle={
         phase === 'password'
           ? 'Required setup before you can use the platform'
-          : 'Scan QR — used as a fallback sign-in method'
+          : `Scan QR in Google Authenticator (${MEMBER_TOTP_APP_LABEL[role]}) — fallback sign-in`
       }
       footer={
         <NeumorphicButton

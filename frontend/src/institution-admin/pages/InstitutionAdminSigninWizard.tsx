@@ -21,6 +21,11 @@ import { OtpChannelPicker } from '@/components/ui/OtpChannelPicker';
 import { institutionAdminApi } from '@/lib/institution-admin-api';
 import { useInstitutionAuthStore } from '@/institution-admin/store/auth.store';
 import { INSTITUTION_RECOVERY_STORAGE_KEY } from '@/components/ui/RecoveryCodeAlertModal';
+import { recordIaLogin } from '@/institution-admin/lib/ia-session';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const IA_AUTH_SIGNIN = authPortalLayoutProps('institution-admin', 'signin');
 
 type Phase = 'credentials' | 'primary_otp' | 'alt_otp' | 'totp' | 'recovery' | 'approval';
 
@@ -28,6 +33,7 @@ const PRIMARY_SEND = 5;
 const ALT_SEND = 3;
 
 export function InstitutionAdminSigninWizard() {
+  useAuthDocumentTitle('institution-admin', 'Sign in');
   const router = useRouter();
   const setAuth = useInstitutionAuthStore((s) => s.setAuth);
   const [phase, setPhase] = useState<Phase>('credentials');
@@ -71,6 +77,7 @@ export function InstitutionAdminSigninWizard() {
       sessionStorage.setItem(INSTITUTION_RECOVERY_STORAGE_KEY, data.newRecoveryCode);
     }
     setAuth(true, { userId: data.userId ?? '', email: data.email ?? identifier }, data.accessToken, data.refreshToken);
+    recordIaLogin(data.email ?? identifier, data.userId, 'Institution Admin sign-in');
     toastSignInSuccess();
     router.replace('/institution-admin/dashboard');
   };
@@ -343,7 +350,15 @@ export function InstitutionAdminSigninWizard() {
   };
 
   return (
-    <StepLayout mode="signin" currentStep={1} totalSteps={6} title={titles[phase].title} subtitle={titles[phase].subtitle} footer={footer()}>
+    <StepLayout
+      {...IA_AUTH_SIGNIN}
+      mode="signin"
+      currentStep={1}
+      totalSteps={6}
+      title={titles[phase].title}
+      subtitle={titles[phase].subtitle}
+      footer={footer()}
+    >
       {body()}
     </StepLayout>
   );

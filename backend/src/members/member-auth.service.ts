@@ -1,6 +1,12 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { LxpMemberRole } from '@prisma/client';
+import { LxpMemberRole, Prisma } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
+import {
+  asExtraRecord,
+  buildCsvProfileData,
+  normalizeStudentSupplement,
+  type StudentSupplement,
+} from './member-profile.util';
 import { PasswordService } from '@/superadmin/auth/services/password.service';
 import { OtpService } from '@/superadmin/auth/services/otp.service';
 import { JwtService } from '@nestjs/jwt';
@@ -82,7 +88,7 @@ export class MemberAuthService {
   async totpSetup(sessionId: string) {
     const session = await this.getSigninSession(sessionId);
     const member = await this.getMember(session.member_id);
-    const { secret, qrCodeUrl } = this.otpService.generateTotpSecret(member.email);
+    const { secret, qrCodeUrl } = this.otpService.generateTotpSecret(member.email, member.role);
     const qrCodeDataUrl = await this.otpService.generateQrCodeDataUrl(qrCodeUrl);
     await this.prisma.lxpMember.update({
       where: { id: member.id },
@@ -164,7 +170,23 @@ export class MemberAuthService {
 
   async getProfile(memberId: string) {
     const member = await this.getMember(memberId);
-    return {
+    const extra = asExtraRecord(member.extra_data);
+    let tenantId = extra.tenant_id ? String(extra.tenant_id) : null;
+    let tenantName = extra.tenant_name ? String(extra.tenant_name) : null;
+
+    if (member.role === 'student' && !tenantId) {
+      const bulkCred = await this.prisma.memberBulkUploadCredential.findFirst({
+        where: { member_id: member.id },
+        orderBy: { created_at: 'desc' },
+        include: { bulk_upload: true },
+      });
+      if (bulkCred?.bulk_upload?.tenant_id) {
+        tenantId = bulkCred.bulk_upload.tenant_id;
+        tenantName = bulkCred.bulk_upload.tenant_name ?? tenantName;
+      }
+    }
+
+    const base = {
       id: member.id,
       role: member.role,
       fullName: member.full_name,
@@ -177,13 +199,54 @@ export class MemberAuthService {
       onboardingCompleted: member.onboarding_completed,
       hasTotp: !!member.totp_secret,
       userId: member.user_id,
+      tenantId,
+      tenantName,
+    };
+
+    if (member.role !== 'student') {
+      return base;
+    }
+
+    return {
+      ...base,
+      csvProfile: buildCsvProfileData(member),
+      studentSupplement: normalizeStudentSupplement(extra.student_supplement),
     };
   }
 
   async updateProfile(
     memberId: string,
-    dto: { fullName?: string; phone?: string; department?: string; employeeId?: string },
+    dto: {
+      fullName?: string;
+      phone?: string;
+      department?: string;
+      employeeId?: string;
+      studentSupplement?: Partial<StudentSupplement>;
+    },
   ) {
+    const member = await this.getMember(memberId);
+
+    if (member.role === 'student') {
+      if (dto.studentSupplement === undefined) {
+        throw new BadRequestException('No profile updates provided');
+      }
+      const extra = asExtraRecord(member.extra_data);
+      const merged = normalizeStudentSupplement({
+        ...normalizeStudentSupplement(extra.student_supplement),
+        ...dto.studentSupplement,
+      });
+      await this.prisma.lxpMember.update({
+        where: { id: memberId },
+        data: {
+          extra_data: {
+            ...extra,
+            student_supplement: merged,
+          } as Prisma.InputJsonValue,
+        },
+      });
+      return this.getProfile(memberId);
+    }
+
     await this.prisma.lxpMember.update({
       where: { id: memberId },
       data: {

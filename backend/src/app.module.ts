@@ -7,6 +7,7 @@ import { SuperadminModule } from './superadmin/superadmin.module';
 import { PlatformAdminModule } from './platform-admin/platform-admin.module';
 import { InstitutionAdminModule } from './institution-admin/institution-admin.module';
 import { MembersModule } from './members/members.module';
+import { TenantsModule } from './tenants/tenants.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MembersModule } from './members/members.module';
     PlatformAdminModule,
     InstitutionAdminModule,
     MembersModule,
+    TenantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

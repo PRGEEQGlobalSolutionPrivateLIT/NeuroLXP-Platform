@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Providers } from './providers';
+import { DashboardThemeScript } from '@/components/dashboard/DashboardThemeScript';
 import './globals.css';
 
 const inter = Inter({
@@ -10,8 +11,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'NeuroLXP SuperAdmin - Secure Authentication',
-  description: 'Enterprise-grade Super Admin authentication system',
+  title: 'NeuroLXP — Learning Experience Platform',
+  description: 'AI-powered enterprise LMS/LXP platform',
+  icons: {
+    icon: '/neurolxp-logo.png',
+    apple: '/neurolxp-logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -20,7 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <DashboardThemeScript />
+      </head>
       <body className="neo-page antialiased font-sans">
         <Providers>{children}</Providers>
       </body>

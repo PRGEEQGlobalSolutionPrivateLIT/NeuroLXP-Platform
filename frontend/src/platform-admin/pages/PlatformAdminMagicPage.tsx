@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import neoToast from '@/lib/toast';
 import { platformAdminApi } from '@/lib/platform-admin-api';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
 
 export function PlatformAdminMagicPage() {
+  useAuthDocumentTitle('platform-admin', 'Magic link');
   const router = useRouter();
   const params = useSearchParams();
   const [error, setError] = useState<string | null>(null);

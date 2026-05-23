@@ -1,6 +1,29 @@
 import { platformApiClient as apiClient } from '@/platform-admin/lib/axios';
 
+export type PlatformAdminProfile = {
+  id: string;
+  fullName: string;
+  dateOfBirth: string;
+  primaryEmail: string;
+  primaryPhone: string;
+  alternativeEmail: string;
+  alternativePhone: string;
+  userId: string;
+  isActive: boolean;
+  onboardingCompleted: boolean;
+  role: string;
+};
+
 export const platformAdminApi = {
+  getProfile: () => apiClient.get<PlatformAdminProfile>('/api/platform-admin/me'),
+
+  updateProfile: (data: {
+    fullName?: string;
+    primaryPhone?: string;
+    alternativeEmail?: string;
+    alternativePhone?: string;
+  }) => apiClient.patch('/api/platform-admin/me', data),
+
   invite: (data: {
     fullName: string;
     dateOfBirth: string;
@@ -9,6 +32,14 @@ export const platformAdminApi = {
     password: string;
     createdBySuperAdminId?: string;
   }) => apiClient.post('/api/platform-admin/invite', data),
+
+  signup: (data: {
+    fullName: string;
+    dateOfBirth: string;
+    primaryEmail: string;
+    primaryPhone: string;
+    password: string;
+  }) => apiClient.post('/api/platform-admin/signup', data),
 
   consumeMagicLink: (token: string, email: string) =>
     apiClient.post('/api/platform-admin/magic-link/consume', { token, email }),

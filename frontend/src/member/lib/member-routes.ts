@@ -20,6 +20,13 @@ export const MEMBER_PORTAL_TAGLINE: Record<MemberRole, string> = {
   coordinator: 'Secure coordinator access',
 };
 
+/** Label shown in Google Authenticator when scanning member TOTP QR */
+export const MEMBER_TOTP_APP_LABEL: Record<MemberRole, string> = {
+  student: 'NeuroLXP Student',
+  faculty: 'NeuroLXP Faculty',
+  coordinator: 'NeuroLXP Coordinator',
+};
+
 export function isMemberRole(value: string | undefined | null): value is MemberRole {
   return value === 'student' || value === 'faculty' || value === 'coordinator';
 }
@@ -77,6 +84,13 @@ export function memberPaths(role: MemberRole) {
     magic: `${base}/auth/magic`,
     onboarding: `${base}/auth/onboarding`,
     forgotPassword: `${base}/auth/forgot-password`,
-    dashboard: '/member/dashboard',
+    dashboard: `${base}/dashboard`,
+    profile: `${base}/profile`,
+    approvals: `${base}/approvals`,
   };
+}
+
+/** Legacy paths → role-scoped dashboard (for bookmarks). */
+export function memberLegacyDashboardRedirectPath(): string {
+  return memberPaths(getMemberLastRole()).dashboard;
 }

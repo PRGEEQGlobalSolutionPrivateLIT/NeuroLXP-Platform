@@ -11,7 +11,7 @@ const MEMBERS: { role: MemberRole; label: string }[] = [
 ];
 
 interface Props {
-  basePath: '/platform-admin' | '/institution-admin';
+  basePath: '/platform-admin' | '/institution-admin' | '/superadmin';
 }
 
 export function MemberDashboardActions({ basePath }: Props) {

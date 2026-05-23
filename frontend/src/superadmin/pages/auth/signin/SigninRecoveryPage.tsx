@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { recordSaLogin } from '@/superadmin/lib/sa-session'
 import { apiClient } from '@/superadmin/lib/axios'
 import { useAuthStore } from '@/superadmin/store/auth.store'
 
@@ -81,6 +82,7 @@ export function SigninRecoveryPage() {
       loginResponse.data.accessToken,
       loginResponse.data.refreshToken,
     )
+    recordSaLogin(loginResponse.data.email, loginResponse.data.userId, 'Recovery sign-in')
 
     toast.success('Logged in successfully!')
     router.push('/superadmin/dashboard')

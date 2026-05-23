@@ -18,6 +18,10 @@ import { PasswordStrength, isPasswordValid } from '@/components/ui/PasswordStren
 import { signupApi } from '@/lib/api';
 import { SECURITY_QUESTION_POOL } from '@/lib/security-questions';
 import { GOVT_ID_TYPES, GOVT_ID_PLACEHOLDERS } from '@/lib/govt-id';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const SA_AUTH_SIGNUP = authPortalLayoutProps('superadmin', 'signup');
 
 const normEmail = (v: string) => v.trim().toLowerCase();
 const normPhone = (v: string) => v.replace(/\D/g, '');
@@ -33,6 +37,7 @@ const DECLARATIONS = [
 const TOTAL = 12;
 
 export function SignupWizard() {
+  useAuthDocumentTitle('superadmin', 'Sign up');
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [sessionId, setSessionId] = useState('');
@@ -218,7 +223,7 @@ export function SignupWizard() {
   const renderStep = () => {
     if (initLoading) {
       return (
-        <StepLayout mode="signup" currentStep={1} totalSteps={TOTAL} title="Preparing registration" subtitle="Setting up your secure session…">
+        <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={1} totalSteps={TOTAL} title="Preparing registration" subtitle="Setting up your secure session…">
           <div className="neo-inset flex items-center justify-center py-12 text-sm text-[var(--neo-muted)]">
             Loading…
           </div>
@@ -229,6 +234,7 @@ export function SignupWizard() {
     if (initError) {
       return (
         <StepLayout
+          {...SA_AUTH_SIGNUP}
           mode="signup"
           currentStep={1}
           totalSteps={TOTAL}
@@ -248,7 +254,7 @@ export function SignupWizard() {
     switch (step) {
       case 1:
         return (
-          <StepLayout mode="signup" currentStep={1} totalSteps={TOTAL} title="Basic Information" subtitle="Enter your legal name and date of birth"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={1} totalSteps={TOTAL} title="Basic Information" subtitle="Enter your legal name and date of birth"
             footer={footer(() => run(async () => {
               if (!sessionId) { neoToast.error('Session not ready'); return; }
               if (!fullName || !dob) { neoToast.error('Fill all fields'); return; }
@@ -267,6 +273,7 @@ export function SignupWizard() {
       case 2:
         return (
           <StepLayout
+            {...SA_AUTH_SIGNUP}
             mode="signup"
             currentStep={2}
             totalSteps={TOTAL}
@@ -340,7 +347,7 @@ export function SignupWizard() {
         );
       case 3:
         return (
-          <StepLayout mode="signup" currentStep={3} totalSteps={TOTAL} title="Set Password"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={3} totalSteps={TOTAL} title="Set Password"
             footer={footer(() => run(async () => {
               if (!isPasswordValid(password) || password !== confirmPassword) {
                 if (password !== confirmPassword) neoToast.error('Passwords do not match');
@@ -359,7 +366,7 @@ export function SignupWizard() {
         );
       case 4:
         return (
-          <StepLayout mode="signup" currentStep={4} totalSteps={TOTAL} title="Your User ID"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={4} totalSteps={TOTAL} title="Your User ID"
             footer={footer(() => setStep(5), !userId, userId ? 'Continue' : 'Generate ID')}>
             {!userId ? (
               <NeumorphicButton variant="primary" onClick={() => run(async () => {
@@ -377,6 +384,7 @@ export function SignupWizard() {
       case 5:
         return (
           <StepLayout
+            {...SA_AUTH_SIGNUP}
             mode="signup"
             currentStep={5}
             totalSteps={TOTAL}
@@ -457,7 +465,7 @@ export function SignupWizard() {
         );
       case 6:
         return (
-          <StepLayout mode="signup" currentStep={6} totalSteps={TOTAL} title="Google Authenticator"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={6} totalSteps={TOTAL} title="Google Authenticator"
             footer={footer(() => run(async () => {
               await signupApi.totpVerify(sessionId, totpCode);
               setStep(7);
@@ -477,7 +485,7 @@ export function SignupWizard() {
                   <img src={qrCode} alt="TOTP QR" className="rounded-lg" width={200} height={200} />
                 </div>
                 <p className="text-center text-sm text-[var(--neo-muted)]">
-                  Scan with Google Authenticator, then enter the 6-digit code
+                  Scan with Google Authenticator (NeuroLXP Super Admin), then enter the 6-digit code
                 </p>
                 <OTPInput value={totpCode} onChange={setTotpCode} label="Authenticator code" />
               </div>
@@ -486,7 +494,7 @@ export function SignupWizard() {
         );
       case 7:
         return (
-          <StepLayout mode="signup" currentStep={7} totalSteps={TOTAL} title="Recovery Code"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={7} totalSteps={TOTAL} title="Recovery Code"
             footer={footer(() => setStep(8), !recoverySaved)}>
             {!recoveryCode ? (
               <NeumorphicButton variant="primary" onClick={() => run(async () => {
@@ -515,7 +523,7 @@ export function SignupWizard() {
         );
       case 8:
         return (
-          <StepLayout mode="signup" currentStep={8} totalSteps={TOTAL} title="Security Codes"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={8} totalSteps={TOTAL} title="Security Codes"
             footer={footer(() => setStep(9), !codesSaved)}>
             {securityCodes.length === 0 ? (
               <NeumorphicButton variant="primary" onClick={() => run(async () => {
@@ -539,7 +547,7 @@ export function SignupWizard() {
         );
       case 9:
         return (
-          <StepLayout mode="signup" currentStep={9} totalSteps={TOTAL} title="Identity Verification"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={9} totalSteps={TOTAL} title="Identity Verification"
             footer={footer(() => run(async () => {
               await signupApi.identity(sessionId, { selfieBase64: selfie, govtIdType: govtType, govtIdNumber: govtId });
               neoToast.success('Identity verified and saved successfully');
@@ -587,7 +595,7 @@ export function SignupWizard() {
         );
       case 10:
         return (
-          <StepLayout mode="signup" currentStep={10} totalSteps={TOTAL} title="Security Questions & Approver"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={10} totalSteps={TOTAL} title="Security Questions & Approver"
             footer={footer(() => run(async () => {
               const chosen = [sq.q1, sq.q2, sq.q3];
               if (chosen.some((q) => !q) || chosen.some((_, i, arr) => arr.indexOf(chosen[i]) !== i)) {
@@ -618,7 +626,7 @@ export function SignupWizard() {
         );
       case 11:
         return (
-          <StepLayout mode="signup" currentStep={11} totalSteps={TOTAL} title="Declarations & Privacy"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={11} totalSteps={TOTAL} title="Declarations & Privacy"
             footer={footer(() => run(async () => {
               await signupApi.declarations(sessionId, declarations);
               const { data } = await signupApi.review(sessionId);
@@ -655,7 +663,7 @@ export function SignupWizard() {
         );
       case 12:
         return (
-          <StepLayout mode="signup" currentStep={12} totalSteps={TOTAL} title="Review & Register"
+          <StepLayout {...SA_AUTH_SIGNUP} mode="signup" currentStep={12} totalSteps={TOTAL} title="Review & Register"
             footer={footer(() => run(async () => {
               const { data } = await signupApi.complete(sessionId);
               localStorage.setItem('recoveryCode', data.recoveryCode);

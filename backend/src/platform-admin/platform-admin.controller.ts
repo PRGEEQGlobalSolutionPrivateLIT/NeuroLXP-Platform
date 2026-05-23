@@ -24,6 +24,21 @@ export class PlatformAdminController {
     return this.platformAdmin.invite(body);
   }
 
+  /** Public self-registration — same flow as invite; magic link emailed to complete onboarding */
+  @Post('signup')
+  signup(
+    @Body()
+    body: {
+      fullName: string;
+      dateOfBirth: string;
+      primaryEmail: string;
+      primaryPhone: string;
+      password: string;
+    },
+  ) {
+    return this.platformAdmin.invite(body);
+  }
+
   @Post('magic-link/consume')
   consumeMagicLink(@Body() body: { token: string; email: string }) {
     return this.platformAdmin.consumeMagicLink(body.token, body.email);

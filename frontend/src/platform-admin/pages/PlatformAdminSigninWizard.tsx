@@ -21,6 +21,12 @@ import { OtpChannelPicker } from '@/components/ui/OtpChannelPicker';
 import { platformAdminApi } from '@/lib/platform-admin-api';
 import { usePlatformAuthStore } from '@/platform-admin/store/auth.store';
 import { PLATFORM_RECOVERY_STORAGE_KEY } from '@/components/ui/RecoveryCodeAlertModal';
+import { recordPaLogin } from '@/platform-admin/lib/pa-session';
+import { PLATFORM_ADMIN_SIGNUP_PATH } from '@/platform-admin/lib/platform-admin-routes';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const PA_AUTH_SIGNIN = authPortalLayoutProps('platform-admin', 'signin');
 
 type Phase = 'credentials' | 'primary_otp' | 'alt_otp' | 'totp' | 'recovery' | 'approval';
 
@@ -28,6 +34,7 @@ const PRIMARY_SEND = 5;
 const ALT_SEND = 3;
 
 export function PlatformAdminSigninWizard() {
+  useAuthDocumentTitle('platform-admin', 'Sign in');
   const router = useRouter();
   const setAuth = usePlatformAuthStore((s) => s.setAuth);
   const [phase, setPhase] = useState<Phase>('credentials');
@@ -71,6 +78,7 @@ export function PlatformAdminSigninWizard() {
       sessionStorage.setItem(PLATFORM_RECOVERY_STORAGE_KEY, data.newRecoveryCode);
     }
     setAuth(true, { userId: data.userId ?? '', email: data.email ?? identifier }, data.accessToken, data.refreshToken);
+    recordPaLogin(data.email ?? identifier, data.userId, 'Platform Admin sign-in');
     toastSignInSuccess();
     router.replace('/platform-admin/dashboard');
   };
@@ -343,7 +351,19 @@ export function PlatformAdminSigninWizard() {
   };
 
   return (
-    <StepLayout mode="signin" currentStep={1} totalSteps={6} title={titles[phase].title} subtitle={titles[phase].subtitle} footer={footer()}>
+    <StepLayout
+      {...PA_AUTH_SIGNIN}
+      mode="signin"
+      currentStep={1}
+      totalSteps={6}
+      title={titles[phase].title}
+      subtitle={titles[phase].subtitle}
+      footerLink={{
+        href: PLATFORM_ADMIN_SIGNUP_PATH,
+        label: 'New platform admin? Register here',
+      }}
+      footer={footer()}
+    >
       {body()}
     </StepLayout>
   );

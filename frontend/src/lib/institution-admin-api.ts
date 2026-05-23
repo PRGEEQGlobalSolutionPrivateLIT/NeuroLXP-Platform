@@ -1,6 +1,29 @@
 import { institutionApiClient as apiClient } from '@/institution-admin/lib/axios';
 
+export type InstitutionAdminProfile = {
+  id: string;
+  fullName: string;
+  dateOfBirth: string;
+  primaryEmail: string;
+  primaryPhone: string;
+  alternativeEmail: string;
+  alternativePhone: string;
+  userId: string;
+  isActive: boolean;
+  onboardingCompleted: boolean;
+  role: string;
+};
+
 export const institutionAdminApi = {
+  getProfile: () => apiClient.get<InstitutionAdminProfile>('/api/institution-admin/me'),
+
+  updateProfile: (data: {
+    fullName?: string;
+    primaryPhone?: string;
+    alternativeEmail?: string;
+    alternativePhone?: string;
+  }) => apiClient.patch('/api/institution-admin/me', data),
+
   invite: (data: {
     fullName: string;
     dateOfBirth: string;

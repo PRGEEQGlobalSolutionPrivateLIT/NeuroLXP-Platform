@@ -1,0 +1,283 @@
+.student-bulk-upload-root .bulkUploadPage {
+  min-height: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  color: #31344b;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+.student-bulk-upload-root .neoCard {
+  width: 100%;
+  border-radius: 22px;
+  background: #e6e7ee;
+  box-shadow: 5px 5px 12px #c3c4ca, -5px -5px 12px #ffffff;
+}
+
+.student-bulk-upload-root .neoInset {
+  width: 100%;
+  border-radius: 18px;
+  background: #e6e7ee;
+  box-shadow: inset 4px 4px 8px #c3c4ca, inset -4px -4px 8px #ffffff;
+}
+
+.student-bulk-upload-root .pageHeader {
+  padding: 32px;
+  text-align: center;
+}
+
+.student-bulk-upload-root .pageTitle {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: #31344b;
+}
+
+.student-bulk-upload-root .sectionTitle {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #31344b;
+}
+
+.student-bulk-upload-root .subTitle {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 600;
+  color: #31344b;
+}
+
+.student-bulk-upload-root .cardTitle {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: #55576a;
+}
+
+.student-bulk-upload-root .pageText {
+  margin: 12px auto 0;
+  max-width: 980px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #55576a;
+}
+
+.student-bulk-upload-root .smallText {
+  font-size: 14px;
+  color: #31344b;
+}
+
+.student-bulk-upload-root .uploadSection {
+  margin-top: 20px;
+  padding: 28px;
+}
+
+.student-bulk-upload-root .uploadBox {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.student-bulk-upload-root .uploadLabel {
+  display: block;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #31344b;
+}
+
+.student-bulk-upload-root .uploadInput {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  background: #e6e7ee;
+  color: #31344b;
+  font-size: 15px;
+  box-shadow: inset 3px 3px 7px #c3c4ca, inset -3px -3px 7px #ffffff;
+}
+
+.student-bulk-upload-root .buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.student-bulk-upload-root .neoButton {
+  min-height: 46px;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 20px;
+  background: #e6e7ee;
+  color: #31344b;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 4px 4px 9px #c3c4ca, -4px -4px 9px #ffffff;
+}
+
+.student-bulk-upload-root .neoButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: inset 3px 3px 7px #c3c4ca, inset -3px -3px 7px #ffffff;
+}
+
+.student-bulk-upload-root .neoButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.student-bulk-upload-root .redButton {
+  color: #d64545;
+}
+
+.student-bulk-upload-root .greenButton {
+  color: #1d8f4e;
+}
+
+.student-bulk-upload-root .summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.student-bulk-upload-root .summaryCard {
+  padding: 20px;
+}
+
+.student-bulk-upload-root .summaryNumber {
+  margin: 12px 0 0;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.student-bulk-upload-root .greenText {
+  color: #1d8f4e;
+}
+
+.student-bulk-upload-root .redText {
+  color: #d64545;
+}
+
+.student-bulk-upload-root .tableWrapper {
+  width: 100%;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.student-bulk-upload-root .tableHeader {
+  padding: 20px;
+  border-bottom: 1px solid #d1d2dc;
+}
+
+.student-bulk-upload-root .tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  padding: 12px;
+}
+
+.student-bulk-upload-root .previewTable {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  text-align: left;
+}
+
+.student-bulk-upload-root .previewTable th {
+  padding: 12px 14px;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 700;
+  color: #55576a;
+}
+
+.student-bulk-upload-root .previewRow {
+  background: #e6e7ee;
+  box-shadow: 3px 3px 7px #c3c4ca, -3px -3px 7px #ffffff;
+}
+
+.student-bulk-upload-root .previewRow td {
+  padding: 14px;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #31344b;
+}
+
+.student-bulk-upload-root .previewRow td:first-child {
+  border-radius: 14px 0 0 14px;
+  font-weight: 700;
+}
+
+.student-bulk-upload-root .previewRow td:last-child {
+  border-radius: 0 14px 14px 0;
+}
+
+.student-bulk-upload-root .statusBadge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: inset 3px 3px 6px #c3c4ca, inset -3px -3px 6px #ffffff;
+}
+
+.student-bulk-upload-root .statusValid {
+  color: #1d8f4e;
+}
+
+.student-bulk-upload-root .statusInvalid {
+  color: #d64545;
+}
+
+.student-bulk-upload-root .errorCell {
+  min-width: 220px;
+  max-width: 360px;
+  white-space: normal !important;
+  line-height: 1.5;
+}
+
+.student-bulk-upload-root .disabledSection {
+  opacity: 0.65;
+}
+
+.student-bulk-upload-root .hiddenFileInput {
+  display: none;
+}
+
+.student-bulk-upload-root .chooseFileButton {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.student-bulk-upload-root .backRow {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .student-bulk-upload-root .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-bulk-upload-root .buttonGroup {
+    flex-direction: column;
+  }
+
+  .student-bulk-upload-root .neoButton {
+    width: 100%;
+  }
+}

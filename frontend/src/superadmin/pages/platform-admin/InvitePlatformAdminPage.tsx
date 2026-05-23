@@ -10,8 +10,13 @@ import { NeumorphicButton } from '@/components/ui/NeumorphicButton';
 import { NeumorphicCard } from '@/components/ui/NeumorphicCard';
 import { PasswordStrength, isPasswordValid } from '@/components/ui/PasswordStrength';
 import { platformAdminApi } from '@/lib/platform-admin-api';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const PA_AUTH_SIGNUP = authPortalLayoutProps('platform-admin', 'signup');
 
 export function InvitePlatformAdminPage() {
+  useAuthDocumentTitle('platform-admin', 'Sign up');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -55,12 +60,14 @@ export function InvitePlatformAdminPage() {
 
   return (
     <StepLayout
+      {...PA_AUTH_SIGNUP}
       mode="signup"
       currentStep={step}
       totalSteps={3}
-      title="Platform Admin onboarding"
+      title="Platform Admin registration"
       subtitle="Create a new platform administrator account"
       backHref="/superadmin/dashboard"
+      footerLink={null}
       footer={
         step < 3 ? (
           <NeumorphicButton

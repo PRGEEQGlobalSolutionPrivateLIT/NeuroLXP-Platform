@@ -39,9 +39,27 @@ export class MembersController {
       rows: CsvRowInput[];
       createdByType?: string;
       createdById?: string;
+      fileName?: string;
+      tenantId?: string;
+      tenantName?: string;
     },
   ) {
     return this.members.bulkInvite(body);
+  }
+
+  @Get('bulk-uploads/recent')
+  listBulkUploads(@Query('uploadedByType') uploadedByType?: string) {
+    return this.members.listRecentBulkUploads(uploadedByType);
+  }
+
+  @Get('bulk-uploads/latest/credentials')
+  latestBulkUploadCredentials(@Query('uploadedByType') uploadedByType?: string) {
+    return this.members.getLatestBulkUploadCredentials(uploadedByType);
+  }
+
+  @Get('bulk-uploads/:bulkUploadId/credentials')
+  bulkUploadCredentials(@Param('bulkUploadId') bulkUploadId: string) {
+    return this.members.getBulkUploadCredentials(bulkUploadId);
   }
 
   @Post('magic-link/consume')
@@ -147,7 +165,14 @@ export class MembersController {
   @Post('profile/:memberId')
   updateProfile(
     @Param('memberId') memberId: string,
-    @Body() body: { fullName?: string; phone?: string; department?: string; employeeId?: string },
+    @Body()
+    body: {
+      fullName?: string;
+      phone?: string;
+      department?: string;
+      employeeId?: string;
+      studentSupplement?: Record<string, string>;
+    },
   ) {
     return this.auth.updateProfile(memberId, body);
   }

@@ -290,6 +290,7 @@ model LxpMember {
   sessions           LxpMemberSession[]
   signin_sessions    LxpMemberSigninSession[]
   approval_requests  LxpMemberApprovalRequest[]
+  bulk_upload_credentials MemberBulkUploadCredential[]
 
   @@unique([email, role])
   @@index([role])
@@ -338,4 +339,85 @@ model LxpMemberApprovalRequest {
   @@index([member_id])
   @@index([status])
   @@index([approver_role])
+}
+
+model MemberBulkUpload {
+  id               String        @id @default(uuid())
+  role             LxpMemberRole
+  uploaded_by_type String
+  uploaded_by_id   String?
+  tenant_id        String?
+  tenant_name      String?
+  file_name        String?
+  total_rows       Int           @default(0)
+  succeeded        Int           @default(0)
+  failed           Int           @default(0)
+  created_at       DateTime      @default(now())
+
+  credentials MemberBulkUploadCredential[]
+
+  @@index([uploaded_by_type])
+  @@index([created_at])
+}
+
+model MemberBulkUploadCredential {
+  id             String   @id @default(uuid())
+  bulk_upload_id String
+  member_id      String?
+  row_index      Int
+  full_name      String
+  email          String
+  user_id        String?
+  temp_password  String
+  magic_link     String
+  email_sent     Boolean  @default(true)
+  created_at     DateTime @default(now())
+
+  bulk_upload MemberBulkUpload @relation(fields: [bulk_upload_id], references: [id], onDelete: Cascade)
+  member      LxpMember?       @relation(fields: [member_id], references: [id], onDelete: SetNull)
+
+  @@index([bulk_upload_id])
+  @@index([email])
+}
+
+model Tenant {
+  id                            String   @id @default(uuid())
+  tenant_id                     String   @unique
+  tenant_name                   String
+  tenant_type                   String
+  country                       String
+  state                         String
+  city                          String
+  contact_person_name           String
+  contact_email                 String
+  contact_mobile                String
+  alternate_contact_person_name String?
+  alternate_contact_email       String?
+  alternate_contact_mobile      String?
+  platform_purpose              String
+  programme_category            String
+  programmes_offered            String
+  expected_users                String
+  subscription_plan             String
+  status                        String   @default("ACTIVE")
+  created_by_type               String?
+  created_by_id                   String?
+  created_at                    DateTime @default(now())
+  updated_at                    DateTime @updatedAt
+
+  module_configuration TenantModuleConfiguration?
+
+  @@index([tenant_type])
+  @@index([status])
+}
+
+model TenantModuleConfiguration {
+  id                     String   @id @default(uuid())
+  tenant_id              String   @unique
+  profiling_tenant_types Json     @default("[]")
+  selected_modules       Json     @default("[]")
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
 }

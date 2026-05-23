@@ -15,7 +15,7 @@ export default function InstitutionMemberInviteRoute() {
   return (
     <MemberInvitePage
       role={role}
-      backHref="/institution-admin/dashboard"
+      backHref="/institution-admin/add-members"
       createdByType="institution_admin"
     />
   );

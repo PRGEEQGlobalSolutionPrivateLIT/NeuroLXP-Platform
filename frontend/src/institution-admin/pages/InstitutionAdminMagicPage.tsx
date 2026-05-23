@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import neoToast from '@/lib/toast';
 import { institutionAdminApi } from '@/lib/institution-admin-api';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
 
 export function InstitutionAdminMagicPage() {
+  useAuthDocumentTitle('institution-admin', 'Magic link');
   const router = useRouter();
   const params = useSearchParams();
   const [error, setError] = useState<string | null>(null);

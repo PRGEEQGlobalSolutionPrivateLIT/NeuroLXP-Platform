@@ -42,6 +42,8 @@ import {
 
 } from '@/member/lib/member-routes';
 
+import { recordMemberLogin } from '@/member/lib/member-session';
+
 
 
 type Phase = 'credentials' | 'fallback' | 'approval';
@@ -151,6 +153,8 @@ export function MemberSigninWizard({ role }: Props) {
       data.refreshToken,
 
     );
+
+    recordMemberLogin(data.email, data.role, data.userId, `${MEMBER_ROLE_LABELS[data.role]} sign-in`);
 
     neoToast.success('Signed in');
 

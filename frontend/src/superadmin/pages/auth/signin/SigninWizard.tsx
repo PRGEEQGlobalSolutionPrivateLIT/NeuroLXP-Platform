@@ -21,7 +21,12 @@ import { DevOtpBanner } from '@/components/ui/DevOtpBanner';
 import { OtpChannelPicker } from '@/components/ui/OtpChannelPicker';
 import { PasswordStrength, isPasswordValid } from '@/components/ui/PasswordStrength';
 import { signinApi } from '@/lib/api';
+import { recordSaLogin } from '@/superadmin/lib/sa-session';
 import { apiClient } from '@/superadmin/lib/axios';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const SA_AUTH_SIGNIN = authPortalLayoutProps('superadmin', 'signin');
 import { useAuthStore } from '@/superadmin/store/auth.store';
 
 type Phase =
@@ -75,6 +80,7 @@ const PHASE_TITLES: Record<Phase, { title: string; subtitle: string }> = {
 };
 
 export function SigninWizard() {
+  useAuthDocumentTitle('superadmin', 'Sign in');
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
   const [phase, setPhase] = useState<Phase>('credentials');
@@ -136,15 +142,10 @@ export function SigninWizard() {
     userId?: string;
     email?: string;
   }) => {
-    setAuth(
-      true,
-      {
-        userId: data.userId ?? 'SA-000000',
-        email: data.email ?? (identifier || 'admin@neurolxp.com'),
-      },
-      data.accessToken,
-      data.refreshToken,
-    );
+    const email = data.email ?? (identifier || 'admin@neurolxp.com');
+    const userId = data.userId ?? 'SA-000000';
+    setAuth(true, { userId, email }, data.accessToken, data.refreshToken);
+    recordSaLogin(email, userId, 'Super Admin sign-in');
     toastSignInSuccess();
     router.replace('/superadmin/dashboard');
   };
@@ -724,6 +725,7 @@ export function SigninWizard() {
 
   return (
     <StepLayout
+      {...SA_AUTH_SIGNIN}
       mode="signin"
       currentStep={1}
       totalSteps={1}

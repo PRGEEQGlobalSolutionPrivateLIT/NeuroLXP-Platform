@@ -155,7 +155,10 @@ export class InstitutionAdminService {
   async totpSetup(sessionId: string) {
     const session = await this.getSigninSession(sessionId);
     const admin = await this.getAdmin(session.institution_admin_id!);
-    const { secret, qrCodeUrl } = this.otpService.generateTotpSecret(admin.primary_email);
+    const { secret, qrCodeUrl } = this.otpService.generateTotpSecret(
+      admin.primary_email,
+      'institution-admin',
+    );
     const qrCodeDataUrl = await this.otpService.generateQrCodeDataUrl(qrCodeUrl);
 
     await this.prisma.institutionAdmin.update({

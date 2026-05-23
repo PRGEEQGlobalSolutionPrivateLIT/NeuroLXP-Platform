@@ -1,0 +1,170 @@
+.tenantPage {
+  min-height: 100vh;
+  width: 100%;
+  padding: 32px;
+  background-color: #e6e7ee;
+  color: #31344b;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.tenantCard {
+  width: 100%;
+  border-radius: 22px;
+  background: #e6e7ee;
+  box-shadow:
+    5px 5px 12px #c3c4ca,
+    -5px -5px 12px #ffffff;
+}
+
+.tenantHeader {
+  padding: 32px;
+  text-align: center;
+}
+
+.tenantTitle {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.tenantForm {
+  margin-top: 28px;
+  padding: 32px;
+}
+
+.tenantSectionTitle {
+  margin-bottom: 22px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.tenantGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 32px;
+}
+
+.tenantField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tenantField label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tenantField input,
+.tenantField select,
+.tenantField textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  padding: 15px 16px;
+  background: #e6e7ee;
+  color: #31344b;
+  font-size: 15px;
+  box-shadow:
+    inset 3px 3px 7px #c3c4ca,
+    inset -3px -3px 7px #ffffff;
+}
+
+.tenantField select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tenantField input.tenantIdReadonly {
+  cursor: not-allowed;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #1d8f4e;
+}
+
+.tenantIdHint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b6d80;
+}
+
+.tenantActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tenantButton {
+  border: none;
+  border-radius: 14px;
+  padding: 14px 24px;
+  background: #e6e7ee;
+  color: #1d8f4e;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow:
+    4px 4px 9px #c3c4ca,
+    -4px -4px 9px #ffffff;
+}
+
+.tenantButton:hover {
+  box-shadow:
+    inset 3px 3px 7px #c3c4ca,
+    inset -3px -3px 7px #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .tenantGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .tenantPage {
+    padding: 18px;
+  }
+
+  .tenantGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tenantHeader,
+  .tenantForm {
+    padding: 22px;
+  }
+
+  .tenantTitle {
+    font-size: 32px;
+  }
+
+  .tenantSectionTitle {
+    font-size: 26px;
+  }
+
+  .tenantButton {
+    width: 100%;
+  }
+}
+
+.tenantActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.secondaryTenantButton {
+  color: #31344b;
+}
+
+@media (max-width: 768px) {
+  .tenantActions {
+    flex-direction: column;
+  }
+
+  .tenantButton {
+    width: 100%;
+  }
+}

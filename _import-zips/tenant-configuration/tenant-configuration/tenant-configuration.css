@@ -1,0 +1,89 @@
+.configPage {
+  min-height: 100vh;
+  padding: 32px;
+  background: #e6e7ee;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.configCard {
+  max-width: 1000px;
+  margin: auto;
+  padding: 40px;
+  border-radius: 24px;
+  background: #e6e7ee;
+  box-shadow:
+    8px 8px 16px #c5c6cc,
+    -8px -8px 16px #ffffff;
+}
+
+.configTitle {
+  margin-bottom: 32px;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 700;
+  color: #31344b;
+}
+
+.configGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.configField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.configField label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #31344b;
+}
+
+.configField input,
+.configField select {
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #e6e7ee;
+  color: #31344b;
+  font-size: 15px;
+  box-shadow:
+    inset 3px 3px 7px #c5c6cc,
+    inset -3px -3px 7px #ffffff;
+}
+
+.configActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.configButton {
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  background: #e6e7ee;
+  color: #1d8f4e;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow:
+    5px 5px 10px #c5c6cc,
+    -5px -5px 10px #ffffff;
+}
+
+.configButton:hover {
+  box-shadow:
+    inset 3px 3px 7px #c5c6cc,
+    inset -3px -3px 7px #ffffff;
+}
+
+@media (max-width: 900px) {
+  .configGrid {
+    grid-template-columns: 1fr;
+  }
+}

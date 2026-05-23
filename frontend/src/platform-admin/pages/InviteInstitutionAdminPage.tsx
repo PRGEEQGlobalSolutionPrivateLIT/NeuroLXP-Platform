@@ -11,8 +11,13 @@ import { NeumorphicCard } from '@/components/ui/NeumorphicCard';
 import { PasswordStrength, isPasswordValid } from '@/components/ui/PasswordStrength';
 import { institutionAdminApi } from '@/lib/institution-admin-api';
 import { usePlatformAuthStore } from '@/platform-admin/store/auth.store';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const IA_AUTH_SIGNUP = authPortalLayoutProps('institution-admin', 'signup');
 
 export function InviteInstitutionAdminPage() {
+  useAuthDocumentTitle('institution-admin', 'Sign up');
   const router = useRouter();
   const { user } = usePlatformAuthStore();
   const [loading, setLoading] = useState(false);
@@ -55,12 +60,14 @@ export function InviteInstitutionAdminPage() {
 
   return (
     <StepLayout
+      {...IA_AUTH_SIGNUP}
       mode="signup"
       currentStep={step}
       totalSteps={3}
-      title="Institution Admin onboarding"
+      title="Institution Admin registration"
       subtitle="Invite a new institution administrator"
-      backHref="/platform-admin/dashboard"
+      backHref="/platform-admin/add-members"
+      footerLink={null}
       footer={
         step < 3 ? (
           <NeumorphicButton
@@ -75,8 +82,8 @@ export function InviteInstitutionAdminPage() {
             {step === 2 ? 'Send magic link & create' : 'Continue'}
           </NeumorphicButton>
         ) : (
-          <NeumorphicButton variant="primary" onClick={() => router.push('/platform-admin/dashboard')}>
-            Back to dashboard
+          <NeumorphicButton variant="primary" onClick={() => router.push('/platform-admin/add-members')}>
+            Back to Add members
           </NeumorphicButton>
         )
       }

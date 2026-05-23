@@ -13,10 +13,15 @@ import { ContactVerificationCard } from '@/components/ui/ContactVerificationCard
 import { institutionAdminApi } from '@/lib/institution-admin-api';
 import { apiClient } from '@/superadmin/lib/axios';
 import { useInstitutionAuthStore } from '@/institution-admin/store/auth.store';
+import { authPortalLayoutProps } from '@/lib/auth-portal-config';
+import { useAuthDocumentTitle } from '@/lib/use-auth-document-title';
+
+const IA_AUTH_ONBOARDING = authPortalLayoutProps('institution-admin', 'onboarding');
 
 type Phase = 'password' | 'totp' | 'alt_contact';
 
 export function InstitutionAdminOnboardingWizard() {
+  useAuthDocumentTitle('institution-admin', 'Onboarding');
   const router = useRouter();
   const params = useSearchParams();
   const sessionId = params.get('sessionId') || '';
@@ -53,7 +58,10 @@ export function InstitutionAdminOnboardingWizard() {
 
   const titles: Record<Phase, { title: string; subtitle: string }> = {
     password: { title: 'Set your password', subtitle: 'Choose a new password. Your User ID will be assigned.' },
-    totp: { title: 'Google Authenticator', subtitle: 'Scan the QR code and verify the 6-digit code.' },
+    totp: {
+      title: 'Google Authenticator',
+      subtitle: 'Scan the QR code (NeuroLXP Institution Admin) and verify the 6-digit code.',
+    },
     alt_contact: { title: 'Alternative contact', subtitle: 'Add and verify backup email and phone (like Platform Admin).' },
   };
 
@@ -61,6 +69,7 @@ export function InstitutionAdminOnboardingWizard() {
 
   return (
     <StepLayout
+      {...IA_AUTH_ONBOARDING}
       mode="signup"
       currentStep={stepIndex}
       totalSteps={3}
